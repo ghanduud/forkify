@@ -26,7 +26,7 @@ class RecipeView {
             </svg>
         </div>
         `;
-        this.#parentElement.innerHTML = '';
+        this.#clear();
         this.#parentElement.insertAdjacentHTML('afterbegin', html);
       }
 
@@ -84,7 +84,7 @@ class RecipeView {
               <h2 class="heading--2">Recipe ingredients</h2>
               <ul class="recipe__ingredient-list">
     
-                ${this.#data.ingredients.map(this.#genereateMarkupIngredient).join('')}
+                ${this.#data.ingredients.map(this.#genereateMarkupIngredient ).join('')}
     
                 
               </ul>
