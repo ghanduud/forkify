@@ -4,14 +4,10 @@ import 'regenerator-runtime/runtime';
 import recipeView from './view/recipeView.js';
 import * as model from './model.js';
 
-const recipeContainer = document.querySelector('.recipe');
-
-  
-
 // https://forkify-api.herokuapp.com/v2
 
+init();
 ///////////////////////////////////////
-['hashchange', 'load'].forEach(ev => window.addEventListener(ev, controllRecipe));
 // controllRecipe();
 async function controllRecipe() {
   try{
@@ -23,7 +19,10 @@ async function controllRecipe() {
     recipeView.render(model.state.recipe);
   }
   catch(err){
-    alert(err);
+    recipeView.renderError();
   }
 }
 
+function init() {
+  recipeView.addHandlerRender(controllRecipe);
+}

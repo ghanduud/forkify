@@ -581,13 +581,9 @@ var _runtime = require("regenerator-runtime/runtime");
 var _recipeViewJs = require("./view/recipeView.js");
 var _recipeViewJsDefault = parcelHelpers.interopDefault(_recipeViewJs);
 var _modelJs = require("./model.js");
-const recipeContainer = document.querySelector(".recipe");
 // https://forkify-api.herokuapp.com/v2
+init();
 ///////////////////////////////////////
-[
-    "hashchange",
-    "load"
-].forEach((ev)=>window.addEventListener(ev, controllRecipe));
 // controllRecipe();
 async function controllRecipe() {
     try {
@@ -598,8 +594,11 @@ async function controllRecipe() {
         const { recipe } = _modelJs.state;
         (0, _recipeViewJsDefault.default).render(_modelJs.state.recipe);
     } catch (err) {
-        alert(err);
+        (0, _recipeViewJsDefault.default).renderError();
     }
+}
+function init() {
+    (0, _recipeViewJsDefault.default).addHandlerRender(controllRecipe);
 }
 
 },{"core-js/modules/web.immediate.js":"49tUX","regenerator-runtime/runtime":"dXNgZ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./view/recipeView.js":"7Olh7","./model.js":"Y4A21"}],"49tUX":[function(require,module,exports) {
@@ -2470,6 +2469,8 @@ var _fractional = require("fractional");
 class RecipeView {
     #parentElement = document.querySelector(".recipe");
     #data;
+    #errorMessage = "Recipe not found try again later or try another one";
+    #message = "";
     render(data) {
         this.#data = data;
         const markup = this.#generateMarkup();
@@ -2480,7 +2481,7 @@ class RecipeView {
         this.#parentElement.innerHTML = "";
     }
     renderSpinner() {
-        const html = `
+        const markup = `
         <div class="spinner">
             <svg>
               <use href="${(0, _iconsSvgDefault.default)}#icon-loader"></use>
@@ -2488,7 +2489,41 @@ class RecipeView {
         </div>
         `;
         this.#clear();
-        this.#parentElement.insertAdjacentHTML("afterbegin", html);
+        this.#parentElement.insertAdjacentHTML("afterbegin", markup);
+    }
+    renderError(message = this.#errorMessage) {
+        const markup = `
+      <div class="error">
+      <div>
+        <svg>
+          <use href="${(0, _iconsSvgDefault.default)}#icon-alert-triangle"></use>
+        </svg>
+      </div>
+      <p>${message}</p>
+    </div>
+      `;
+        this.#clear();
+        this.#parentElement.insertAdjacentHTML("afterbegin", markup);
+    }
+    renderMessage(message = this.#message) {
+        const markup = `
+      <div class="message">
+      <div>
+        <svg>
+          <use href="${(0, _iconsSvgDefault.default)}#icon-smile"></use>
+        </svg>
+      </div>
+      <p>${message}</p>
+    </div>
+      `;
+        this.#clear();
+        this.#parentElement.insertAdjacentHTML("afterbegin", markup);
+    }
+    addHandlerRender(handler) {
+        [
+            "hashchange",
+            "load"
+        ].forEach((ev)=>window.addEventListener(ev, handler));
     }
     #generateMarkup() {
         return `
@@ -2905,10 +2940,11 @@ async function loadRecipe(id) {
         };
     } catch (err) {
         console.error(`${err}!! try again later`);
+        throw err;
     }
 }
 
-},{"regenerator-runtime":"dXNgZ","./config":"k5Hzs","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./helper":"lVRAz"}],"k5Hzs":[function(require,module,exports) {
+},{"regenerator-runtime":"dXNgZ","./config":"k5Hzs","./helper":"lVRAz","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"k5Hzs":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "API_URL", ()=>API_URL);
@@ -2943,6 +2979,6 @@ async function getJSON(url) {
     }
 }
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./config":"k5Hzs"}]},["kYpTN","aenu9"], "aenu9", "parcelRequire3a11")
+},{"./config":"k5Hzs","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["kYpTN","aenu9"], "aenu9", "parcelRequire3a11")
 
 //# sourceMappingURL=index.e37f48ea.js.map
