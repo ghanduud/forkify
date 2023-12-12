@@ -52,11 +52,17 @@ export async function loadSearchResult(query) {
 	}
 }
 
-
-export function getSearchResultsPage (page = state.search.page) {
+export function getSearchResultsPage(page = state.search.page) {
 	state.search.page = page;
 	const start = (page - 1) * state.search.resultsPerPage;
 	const end = page * state.search.resultsPerPage;
 
 	return state.search.results.slice(start, end);
+}
+
+export function updateServings(newServings) {
+	state.recipe.ingredients.forEach(
+		(ing) => (ing.quantity = (ing.quantity * newServings) / state.recipe.servings)
+	);
+	state.recipe.servings = newServings;
 }
