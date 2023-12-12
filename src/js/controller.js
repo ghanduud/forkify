@@ -33,14 +33,14 @@ async function controlSearchResult() {
 		// resultView.render(model.state.search.results);
 		resultView.render(model.getSearchResultsPage());
 		paginationView.render(model.state.search);
-
 	} catch (err) {
 		resultView.renderError();
 	}
 }
 
-function controlPagenation() {
-	console.log('pag controller');
+function controlPagenation(goToPage) {
+	resultView.render(model.getSearchResultsPage(goToPage));
+	paginationView.render(model.state.search);
 }
 
 function init() {
