@@ -1,4 +1,5 @@
 node_modules
 forkify-*.png
+.parcel-cache
 
 
