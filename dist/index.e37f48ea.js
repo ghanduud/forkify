@@ -627,7 +627,7 @@ function controlServing(newServing) {
     _modelJs.updateServings(newServing);
     (0, _recipeViewJsDefault.default).update(_modelJs.state.recipe);
 }
-function controlBookmarks() {
+function controlBookmark() {
     try {
         if (!_modelJs.state.recipe.bookmarked) _modelJs.addBookmark(_modelJs.state.recipe);
         else _modelJs.deleteBookmarks(_modelJs.state.recipe.id);
@@ -637,11 +637,19 @@ function controlBookmarks() {
         (0, _bookmarkViewJsDefault.default).renderError();
     }
 }
+function controlBookmarks() {
+    try {
+        (0, _bookmarkViewJsDefault.default).render(_modelJs.state.bookmarks);
+    } catch (err) {
+        (0, _bookmarkViewJsDefault.default).renderError();
+    }
+}
 function init() {
+    (0, _bookmarkViewJsDefault.default).addHnadlerRender(controlBookmarks);
     (0, _recipeViewJsDefault.default).addHandlerRender(controlRecipe);
     (0, _recipeViewJsDefault.default).addHandlerUpdateServing(controlServing);
     (0, _searchViewJsDefault.default).addHandlerSearch(controlSearchResult);
-    (0, _recipeViewJsDefault.default).addHandlerBookmark(controlBookmarks);
+    (0, _recipeViewJsDefault.default).addHandlerBookmark(controlBookmark);
     (0, _paginationViewJsDefault.default).addHandlerClick(controlPagenation);
 }
 
@@ -2998,6 +3006,7 @@ module.exports.Fraction = Fraction;
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "state", ()=>state);
+// console.log(state.bookmarks);
 parcelHelpers.export(exports, "loadRecipe", ()=>loadRecipe);
 parcelHelpers.export(exports, "loadSearchResult", ()=>loadSearchResult);
 parcelHelpers.export(exports, "getSearchResultsPage", ()=>getSearchResultsPage);
@@ -3017,6 +3026,7 @@ const state = {
     },
     bookmarks: []
 };
+init();
 async function loadRecipe(id) {
     try {
         const data = await (0, _helper.getJSON)(`${(0, _config.API_URL)}${id}`);
@@ -3069,11 +3079,20 @@ function updateServings(newServings) {
 function addBookmark(recipe) {
     state.bookmarks.push(recipe);
     if (recipe.id === state.recipe.id) state.recipe.bookmarked = true;
+    presistBookmarks();
 }
 function deleteBookmarks(id) {
     const index = state.bookmarks.findIndex((bookmark)=>bookmark.id === id);
     state.bookmarks.splice(index, 1);
     if (id === state.recipe.id) state.recipe.bookmarked = false;
+    presistBookmarks();
+}
+function presistBookmarks() {
+    localStorage.setItem("bookmarks", JSON.stringify(state.bookmarks));
+}
+function init() {
+    const storge = localStorage.getItem("bookmarks");
+    if (storge) state.bookmarks = JSON.parse(storge);
 }
 
 },{"regenerator-runtime":"dXNgZ","./config":"k5Hzs","./helper":"lVRAz","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"k5Hzs":[function(require,module,exports) {
@@ -3238,6 +3257,9 @@ class BookmarkView extends (0, _previewViewDefault.default) {
     _parentEl = document.querySelector(".bookmarks__list");
     _errorMessage = "No bookmarked recipes yet :)";
     _message = "";
+    addHnadlerRender(handler) {
+        window.addEventListener("load", handler);
+    }
 }
 exports.default = new BookmarkView();
 

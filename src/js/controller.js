@@ -50,7 +50,7 @@ function controlServing(newServing) {
 	
 }
 
-function controlBookmarks() {
+function controlBookmark() {
 	try{
 		if(!model.state.recipe.bookmarked) model.addBookmark(model.state.recipe);
 		else model.deleteBookmarks(model.state.recipe.id);
@@ -63,10 +63,20 @@ function controlBookmarks() {
 
 }
 
+function controlBookmarks() {
+	try{
+		bookmarkView.render(model.state.bookmarks);
+	}
+	catch(err){
+		bookmarkView.renderError();
+	}
+}
+
 function init() {
+	bookmarkView.addHnadlerRender(controlBookmarks)
 	recipeView.addHandlerRender(controlRecipe);
 	recipeView.addHandlerUpdateServing(controlServing);
 	searchView.addHandlerSearch(controlSearchResult);
-	recipeView.addHandlerBookmark(controlBookmarks);
+	recipeView.addHandlerBookmark(controlBookmark);
 	paginationView.addHandlerClick(controlPagenation);
 }
