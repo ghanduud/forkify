@@ -1,5 +1,6 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
+import { MODEL_CLOSE_SEC } from './config.js';
 import recipeView from './view/recipeView.js';
 import * as model from './model.js';
 import searchView from './view/searchView.js';
@@ -7,7 +8,7 @@ import resultView from './view/resultView.js';
 import paginationView from './view/paginationView.js';
 import bookmarkView from './view/bookmarkView.js';
 import addRecipeView from './view/addRecipeView.js';
-// import AddRecipeView 
+// import AddRecipeView
 // https://forkify-api.herokuapp.com/v2
 
 init();
@@ -49,37 +50,43 @@ function controlPagenation(goToPage) {
 function controlServing(newServing) {
 	model.updateServings(newServing);
 	recipeView.update(model.state.recipe);
-	
 }
 
 function controlBookmark() {
-	try{
-		if(!model.state.recipe.bookmarked) model.addBookmark(model.state.recipe);
+	try {
+		if (!model.state.recipe.bookmarked) model.addBookmark(model.state.recipe);
 		else model.deleteBookmarks(model.state.recipe.id);
 		recipeView.update(model.state.recipe);
 		bookmarkView.render(model.state.bookmarks);
-	}
-	catch(err){
+	} catch (err) {
 		bookmarkView.renderError();
 	}
-
 }
 
 function controlBookmarks() {
-	try{
+	try {
 		bookmarkView.render(model.state.bookmarks);
-	}
-	catch(err){
+	} catch (err) {
 		bookmarkView.renderError();
 	}
 }
 
-function controlAddRecipe(newRecipe) {
-	console.log(newRecipe);
+async function controlAddRecipe(newRecipe) {
+	try {
+		addRecipeView.renderSpinner();
+		await model.uploadRecipe(newRecipe);
+		recipeView.render(model.state.recipe);
+		addRecipeView.renderMessage();
+		bookmarkView.render(model.state.bookmarks);
+		window.history.pushState(null, '', `#${model.state.recipe.id}`);
+		setTimeout(() => addRecipeView.toggleWindow(), MODEL_CLOSE_SEC * 1000);
+	} catch (err) {
+		addRecipeView.renderError(err.message);
+	}
 }
 
 function init() {
-	bookmarkView.addHnadlerRender(controlBookmarks)
+	bookmarkView.addHnadlerRender(controlBookmarks);
 	recipeView.addHandlerRender(controlRecipe);
 	recipeView.addHandlerUpdateServing(controlServing);
 	searchView.addHandlerSearch(controlSearchResult);

@@ -3,6 +3,10 @@ import icons from 'url:../../img/icons.svg';
 export default class View {
 	_data;
 
+	/**
+	 * render the recived object to the dom
+	 * @param {Object | Object[]} data the data to be renderd
+	 */
 	render(data) {
 		if (!data || (Array.isArray(data) && data.length === 0)) throw 'No Data Found';
 		this._data = data;
@@ -17,10 +21,12 @@ export default class View {
 		const newDOM = document.createRange().createContextualFragment(newMarkup);
 		const newElements = Array.from(newDOM.querySelectorAll('*'));
 		const currElements = Array.from(this._parentEl.querySelectorAll('*'));
-		newElements.forEach((newEl,i) => {
+		newElements.forEach((newEl, i) => {
 			const curEl = currElements[i];
-			if(!newEl.isEqualNode(curEl) && newEl.firstChild?.nodeValue.trim() !== '') curEl.textContent = newEl.textContent;
-			if(!newEl.isEqualNode(curEl)) Array.from(newEl.attributes).forEach(attr => curEl.setAttribute(attr.name, attr.value));
+			if (!newEl.isEqualNode(curEl) && newEl.firstChild?.nodeValue.trim() !== '')
+				curEl.textContent = newEl.textContent;
+			if (!newEl.isEqualNode(curEl))
+				Array.from(newEl.attributes).forEach((attr) => curEl.setAttribute(attr.name, attr.value));
 		});
 	}
 
