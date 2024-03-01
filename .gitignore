@@ -1,5 +1,4 @@
 node_modules
-forkify-*.png
-.parcel-cache
 dist
-
+.parcel-cache
+.DS_Store

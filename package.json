@@ -1,21 +1,21 @@
 {
-	"name": "forkify",
-	"version": "1.0.0",
-	"description": "recipe website",
-	"default": "./src/js/controller.js",
-	"scripts": {
-		"start": "parcel index.html",
-		"build": "parcel build index.html --dist-dir ./dist"
-	},
-	"author": "Omar Ghandy",
-	"license": "ISC",
-	"devDependencies": {
-		"@parcel/transformer-sass": "^2.10.3",
-		"parcel": "^2.10.3"
-	},
-	"dependencies": {
-		"core-js": "^3.33.3",
-		"fractional": "^1.0.0",
-		"regenerator-runtime": "^0.14.0"
-	}
+  "name": "forkify",
+  "version": "1.0.0",
+  "description": "Recipe application",
+  "default": "index.html",
+  "scripts": {
+    "start": "parcel index.html",
+    "build": "parcel build index.html --dist-dir ./dist"
+  },
+  "author": "Jonas Schedtmann",
+  "license": "ISC",
+  "devDependencies": {
+    "parcel": "^2.0.0-beta.1",
+    "sass": "^1.26.10"
+  },
+  "dependencies": {
+    "core-js": "^3.6.5",
+    "fractional": "^1.0.0",
+    "regenerator-runtime": "^0.13.7"
+  }
 }
